@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 470" font-family="'Malgun Gothic','Noto Sans KR',sans-serif" font-size="13">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c0392b"/></marker>
+  </defs>
+  <style>
+    .enc{fill:#dbe9f7;stroke:#2e6da4;stroke-width:1.5}
+    .dec{fill:#e3f3e1;stroke:#3c8d3c;stroke-width:1.5}
+    .bot{fill:#fdebd0;stroke:#d68910;stroke-width:1.5}
+    .io{fill:#f2f2f2;stroke:#777;stroke-width:1.2}
+    .t{font-weight:bold}
+    .s{font-size:11.5px;fill:#444}
+    .ln{stroke:#333;stroke-width:1.4;fill:none;marker-end:url(#ar)}
+    .sk{stroke:#c0392b;stroke-width:1.6;fill:none;stroke-dasharray:6 4;marker-end:url(#ab)}
+    .ck{font-size:11.5px;fill:#c0392b;font-weight:bold}
+  </style>
+
+  <!-- input / output -->
+  <rect class="io" x="20" y="10" width="160" height="34" rx="5"/>
+  <text x="100" y="32" text-anchor="middle">입력 (3, 128, 128)</text>
+  <rect class="io" x="560" y="10" width="180" height="34" rx="5"/>
+  <text x="650" y="25" text-anchor="middle" class="s">1×1 conv → sigmoid</text>
+  <text x="650" y="39" text-anchor="middle">출력 (1, 128, 128)</text>
+
+  <!-- encoder -->
+  <rect class="enc" x="20" y="70" width="160" height="50" rx="5"/>
+  <text x="100" y="91" text-anchor="middle" class="t">enc1  double_conv</text>
+  <text x="100" y="110" text-anchor="middle">(16, 128, 128)</text>
+
+  <rect class="enc" x="60" y="170" width="160" height="50" rx="5"/>
+  <text x="140" y="191" text-anchor="middle" class="t">enc2  double_conv</text>
+  <text x="140" y="210" text-anchor="middle">(32, 64, 64)</text>
+
+  <rect class="enc" x="100" y="270" width="160" height="50" rx="5"/>
+  <text x="180" y="291" text-anchor="middle" class="t">enc3  double_conv</text>
+  <text x="180" y="310" text-anchor="middle">(64, 32, 32)</text>
+
+  <rect class="bot" x="290" y="380" width="180" height="56" rx="5"/>
+  <text x="380" y="401" text-anchor="middle" class="t">enc4 (bottleneck)</text>
+  <text x="380" y="422" text-anchor="middle">(128, 16, 16)</text>
+
+  <!-- decoder -->
+  <rect class="dec" x="500" y="270" width="190" height="50" rx="5"/>
+  <text x="595" y="291" text-anchor="middle" class="t">dec3  double_conv</text>
+  <text x="595" y="310" text-anchor="middle">192 → (64, 32, 32)</text>
+
+  <rect class="dec" x="540" y="170" width="190" height="50" rx="5"/>
+  <text x="635" y="191" text-anchor="middle" class="t">dec2  double_conv</text>
+  <text x="635" y="210" text-anchor="middle">96 → (32, 64, 64)</text>
+
+  <rect class="dec" x="560" y="70" width="180" height="50" rx="5"/>
+  <text x="650" y="91" text-anchor="middle" class="t">dec1  double_conv</text>
+  <text x="650" y="110" text-anchor="middle">48 → (16, 128, 128)</text>
+
+  <!-- down path -->
+  <path class="ln" d="M100,44 L100,68"/>
+  <path class="ln" d="M100,120 L100,145 L140,145 L140,168"/>
+  <text x="148" y="150" class="s">MaxPool ↓ (16, 64, 64)</text>
+  <path class="ln" d="M140,220 L140,245 L180,245 L180,268"/>
+  <text x="188" y="250" class="s">MaxPool ↓ (32, 32, 32)</text>
+  <path class="ln" d="M180,320 L180,408 L288,408"/>
+  <text x="190" y="372" class="s">MaxPool ↓ (64, 16, 16)</text>
+
+  <!-- up path -->
+  <path class="ln" d="M472,408 L595,408 L595,322"/>
+  <text x="603" y="372" class="s">×2 업샘플 (128, 32, 32)</text>
+  <path class="ln" d="M595,270 L595,245 L635,245 L635,222"/>
+  <text x="643" y="250" class="s">×2 (64, 64, 64)</text>
+  <path class="ln" d="M635,170 L635,145 L650,145 L650,122"/>
+  <text x="658" y="150" class="s">×2 (32, 128, 128)</text>
+  <path class="ln" d="M650,70 L650,46"/>
+
+  <!-- skips -->
+  <path class="sk" d="M180,95 L558,95"/>
+  <text x="370" y="88" text-anchor="middle" class="ck">skip: cat 16 + 32 = 48</text>
+  <path class="sk" d="M220,195 L538,195"/>
+  <text x="380" y="188" text-anchor="middle" class="ck">skip: cat 32 + 64 = 96</text>
+  <path class="sk" d="M260,295 L498,295"/>
+  <text x="380" y="288" text-anchor="middle" class="ck">skip: cat 64 + 128 = 192</text>
+</svg>
